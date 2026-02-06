@@ -63,8 +63,7 @@ class ProjectResource extends JsonResource
             
             // Relationships (if loaded)
             'services' => $this->whenLoaded('services'),
-            'skills' => $this->whenLoaded('skills'),
-            'testimonials' => $this->whenLoaded('testimonials'),
+            'skills' => $this->whenLoaded('skills')
         ];
     }
 }

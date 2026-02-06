@@ -113,6 +113,24 @@ return [
     'try_adjusting_search' => 'حاول تعديل البحث أو معايير التصفية',
     'technologies_used' => 'التقنيات المستخدمة:',
     
+    // Hero Section for Projects Page
+    'available_for_work' => 'متاح للعمل',
+    'building' => 'نبني',
+    'digital_experiences' => 'تجارب رقمية',
+    'projects_subtitle' => 'نصمم حلولاً أنيقة باستخدام التقنيات الحديثة',
+    'categories' => 'الفئات',
+    'completed' => 'مكتمل',
+    'ongoing' => 'قيد التنفيذ',
+    'lets_collaborate' => 'دعنا نتعاون',
+    'view_work' => 'عرض الأعمال',
+    'all_projects' => 'جميع المشاريع',
+    'view_live' => 'عرض مباشر',
+    'view_code' => 'عرض الكود',
+    'have_project_in_mind' => 'هل لديك مشروع في ذهنك؟',
+    'lets_work_together' => 'دعنا نعمل معاً لتحويل أفكارك إلى واقع.',
+    'try_different_filters' => 'جرب مرشحات مختلفة',
+    'clear_filters' => 'مسح المرشحات',
+    
     // Contact Page
     'contact_description' => 'لا تتردد في التواصل معي لأي استفسارات أو تعاون.',
     'message_placeholder' => 'رسالتك هنا...',

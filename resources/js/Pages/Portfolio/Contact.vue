@@ -3,6 +3,7 @@ import { Head } from '@inertiajs/vue3';
 import { ref, reactive } from 'vue';
 import PortfolioLayout from '@/Layouts/PortfolioLayout.vue';
 import { useScrollAnimations } from '@/Composables/useScrollAnimations.js';
+import { useGeometricShowcase } from '@/Composables/useGeometricShowcase.js';
 
 defineOptions({ layout: PortfolioLayout });
 
@@ -14,6 +15,18 @@ const props = defineProps({
 });
 
 useScrollAnimations();
+
+// Initialize geometric showcase
+const {
+    geometricElements,
+    connectionLines,
+    ripples,
+    isDarkMode,
+    handleMouseMove,
+    getElementStyle,
+    getLineStyle,
+    getRippleStyle
+} = useGeometricShowcase();
 
 const form = reactive({
     name: '',
@@ -65,16 +78,139 @@ const validateField = (field) => {
 <template>
     <Head :title="translations.contact" />
     
-    <!-- Hero Section -->
-    <section class="section-padding bg-gradient-to-r from-cyan-600 to-cyan-800 dark:from-cyan-700 dark:to-cyan-900 text-white">
-        <div class="container-max">
-            <div class="text-center animate-fade-in">
-                <h1 class="text-4xl md:text-5xl font-bold mb-6">
-                    {{ translations.contact_title }}
+    <!-- Interactive Hero Section with Geometric Showcase -->
+    <section 
+        @mousemove="handleMouseMove"
+        class="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-cyan-600 via-cyan-700 to-cyan-800 dark:from-cyan-800 dark:via-cyan-900 dark:to-cyan-950 text-white transition-all duration-500 overflow-hidden"
+    >
+        <!-- Geometric Elements Layer -->
+        <div class="absolute inset-0 pointer-events-none">
+            <!-- Connection Lines -->
+            <svg class="absolute inset-0 w-full h-full">
+                <line
+                    v-for="line in connectionLines"
+                    :key="line.id"
+                    :x1="line.x1"
+                    :y1="line.y1"
+                    :x2="line.x2"
+                    :y2="line.y2"
+                    :stroke="line.color"
+                    :opacity="line.opacity * 0.6"
+                    stroke-width="1"
+                />
+            </svg>
+            
+            <!-- Floating Geometric Elements -->
+            <div
+                v-for="element in geometricElements"
+                :key="element.id"
+                :style="getElementStyle(element)"
+            />
+            
+            <!-- Ripple Effects -->
+            <div
+                v-for="ripple in ripples"
+                :key="ripple.id"
+                :style="getRippleStyle(ripple)"
+            />
+            
+            <!-- Animated Background Orbs -->
+            <div class="absolute -top-32 -right-32 w-96 h-96 bg-white/5 rounded-full mix-blend-overlay animate-float"></div>
+            <div class="absolute -bottom-32 -left-32 w-80 h-80 bg-cyan-400/5 rounded-full mix-blend-overlay animate-float" style="animation-delay: 3s"></div>
+            <div class="absolute top-1/3 right-1/4 w-48 h-48 bg-white/3 rounded-full mix-blend-overlay animate-pulse"></div>
+            <div class="absolute bottom-1/3 left-1/3 w-64 h-64 bg-cyan-300/4 rounded-full mix-blend-overlay animate-float" style="animation-delay: 1.5s"></div>
+        </div>
+        
+        <!-- Hero Content -->
+        <div class="container-max px-4 relative z-10">
+            <div class="text-center">
+                <!-- Animated Title with Glow Effect -->
+                <h1 class="text-4xl md:text-6xl lg:text-7xl font-bold mb-8 animate-fade-in relative">
+                    <span class="relative inline-block">
+                        {{ translations.contact_title }}
+                        <!-- Animated Underline -->
+                        <div class="absolute -bottom-2 left-0 right-0 h-1 bg-gradient-to-r from-cyan-300 via-white to-cyan-300 transform scale-x-0 animate-expand-line"></div>
+                        <!-- Glow Effect -->
+                        <div class="absolute inset-0 blur-xl bg-cyan-300/30 animate-pulse"></div>
+                    </span>
                 </h1>
-                <p class="text-xl max-w-3xl mx-auto text-cyan-100 dark:text-cyan-50">
+                
+                <!-- Animated Subtitle with Typing Effect -->
+                <p class="text-xl md:text-2xl lg:text-3xl max-w-4xl mx-auto text-cyan-100 dark:text-cyan-50 mb-12 animate-slide-up leading-relaxed" style="animation-delay: 0.3s">
                     {{ translations.contact_description }}
                 </p>
+                
+                <!-- Interactive Call-to-Action Buttons -->
+                <div class="flex flex-col sm:flex-row gap-6 justify-center animate-slide-up" style="animation-delay: 0.6s">
+                    <a 
+                        href="#contact-form" 
+                        class="group relative px-8 py-4 rounded-2xl bg-gradient-to-r from-cyan-400 to-cyan-500 hover:from-cyan-500 hover:to-cyan-600 text-white font-semibold shadow-2xl hover:shadow-cyan-500/25 transform hover:scale-105 transition-all duration-500 overflow-hidden"
+                    >
+                        <!-- Button Shimmer Effect -->
+                        <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                        <!-- Button Glow -->
+                        <div class="absolute inset-0 rounded-2xl bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                        <span class="relative z-10 flex items-center justify-center">
+                            <svg class="w-5 h-5 mr-2 animate-bounce" style="animation-delay: 0.2s" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                            </svg>
+                            {{ translations.send_message }}
+                        </span>
+                    </a>
+                    <a 
+                        href="#contact-info" 
+                        class="group relative px-8 py-4 rounded-2xl border-2 border-white/30 hover:border-white/60 text-white font-semibold backdrop-blur-sm hover:bg-white/10 transform hover:scale-105 transition-all duration-500 overflow-hidden"
+                    >
+                        <!-- Hover Background -->
+                        <div class="absolute inset-0 bg-gradient-to-r from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                        <span class="relative z-10 flex items-center justify-center">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            {{ translations.learn_more || 'Learn More' }}
+                        </span>
+                    </a>
+                </div>
+                
+                <!-- Floating Contact Icons -->
+                <div class="absolute top-20 left-10 animate-float opacity-60">
+                    <div class="w-16 h-16 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center border border-white/20">
+                        <svg class="w-8 h-8 text-cyan-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                        </svg>
+                    </div>
+                </div>
+                <div class="absolute top-32 right-16 animate-float opacity-60" style="animation-delay: 1s">
+                    <div class="w-14 h-14 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center border border-white/20">
+                        <svg class="w-7 h-7 text-cyan-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                        </svg>
+                    </div>
+                </div>
+                <div class="absolute bottom-20 left-20 animate-float opacity-60" style="animation-delay: 2s">
+                    <div class="w-12 h-12 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center border border-white/20">
+                        <svg class="w-6 h-6 text-cyan-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Enhanced Scroll Indicator -->
+        <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+            <div class="flex flex-col items-center group cursor-pointer" onclick="document.getElementById('contact-form').scrollIntoView({behavior: 'smooth'})">
+                <span class="text-cyan-200 text-sm mb-2 opacity-70 group-hover:opacity-100 transition-opacity duration-300">
+                    {{ translations.scroll_down || 'Scroll Down' }}
+                </span>
+                <div class="relative">
+                    <svg class="w-6 h-6 text-cyan-200 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+                    </svg>
+                    <!-- Glow Effect -->
+                    <div class="absolute inset-0 blur-md bg-cyan-400/50 animate-pulse"></div>
+                </div>
             </div>
         </div>
     </section>
@@ -84,7 +220,7 @@ const validateField = (field) => {
         <div class="container-max">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
                 <!-- Contact Form -->
-                <div class="animate-slide-in-left">
+                <div id="contact-form" class="animate-slide-in-left">
                     <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-xl p-8 transition-all duration-500 border border-white/20 dark:border-slate-700/50 hover:shadow-2xl">
                         <h2 class="text-2xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-cyan-500 to-cyan-600 dark:from-cyan-400 dark:to-cyan-300">
                             {{ translations.send_message }}
@@ -189,7 +325,7 @@ const validateField = (field) => {
                 </div>
                 
                 <!-- Contact Information -->
-                <div class="animate-slide-in-right space-y-6">
+                <div id="contact-info" class="animate-slide-in-right space-y-6">
                     <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-xl p-8 transition-all duration-500 border border-white/20 dark:border-slate-700/50 hover:shadow-2xl">
                         <h2 class="text-2xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-cyan-500 to-cyan-600 dark:from-cyan-400 dark:to-cyan-300">
                             {{ translations.contact_title }}
@@ -204,7 +340,7 @@ const validateField = (field) => {
                                 </div>
                                 <div>
                                     <p class="text-sm font-medium text-slate-500 dark:text-slate-400">{{ translations.email }}</p>
-                                    <p class="text-slate-800 dark:text-slate-200 font-medium">{{ data.email }}</p>
+                                    <a :href="`mailto:${data.email}`" class="text-slate-800 dark:text-slate-200 font-medium hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors duration-300">{{ data.email }}</a>
                                 </div>
                             </div>
                             
@@ -216,7 +352,7 @@ const validateField = (field) => {
                                 </div>
                                 <div>
                                     <p class="text-sm font-medium text-slate-500 dark:text-slate-400">{{ translations.phone }}</p>
-                                    <p class="text-slate-800 dark:text-slate-200 font-medium">{{ data.phone }}</p>
+                                    <a :href="`tel:${data.phone}`" class="text-slate-800 dark:text-slate-200 font-medium hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors duration-300">{{ data.phone }}</a>
                                 </div>
                             </div>
                             
@@ -229,7 +365,7 @@ const validateField = (field) => {
                                 </div>
                                 <div>
                                     <p class="text-sm font-medium text-slate-500 dark:text-slate-400">{{ translations.location }}</p>
-                                    <p class="text-slate-800 dark:text-slate-200 font-medium">{{ data.location }}</p>
+                                    <a :href="`https://maps.google.com/?q=${encodeURIComponent(data.location)}`" target="_blank" class="text-slate-800 dark:text-slate-200 font-medium hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors duration-300">{{ data.location }}</a>
                                 </div>
                             </div>
                         </div>

@@ -116,6 +116,24 @@ return [
     'view_project' => 'View Project',
     'technologies_used' => 'Technologies Used:',
     
+    // Hero Section for Projects Page
+    'available_for_work' => 'Available for Work',
+    'building' => 'Building',
+    'digital_experiences' => 'Digital Experiences',
+    'projects_subtitle' => 'Crafting elegant solutions with modern technologies',
+    'categories' => 'Categories',
+    'completed' => 'Completed',
+    'ongoing' => 'Ongoing',
+    'lets_collaborate' => 'Let\'s Collaborate',
+    'view_work' => 'View Work',
+    'all_projects' => 'All Projects',
+    'view_live' => 'View Live',
+    'view_code' => 'View Code',
+    'have_project_in_mind' => 'Have a project in mind?',
+    'lets_work_together' => 'Let\'s work together to bring your ideas to life.',
+    'try_different_filters' => 'Try different filters',
+    'clear_filters' => 'Clear Filters',
+    
     // Contact Page
     'contact_me' => 'Contact Me',
     'contact_description' => 'Feel free to reach out to me for any inquiries or collaborations.',

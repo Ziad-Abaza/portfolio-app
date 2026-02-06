@@ -8,6 +8,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -59,5 +60,45 @@ class ProfileController extends Controller
         $request->session()->regenerateToken();
 
         return Redirect::to('/');
+    }
+
+    /**
+     * Upload user avatar.
+     */
+    public function uploadAvatar(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'avatar' => ['required', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
+        ]);
+
+        $user = $request->user();
+
+        // Delete old avatar if exists
+        if ($user->avatar) {
+            Storage::disk('public')->delete('avatars/' . $user->avatar);
+        }
+
+        // Upload new avatar
+        $avatarPath = $request->file('avatar')->store('avatars', 'public');
+        $user->avatar = basename($avatarPath);
+        $user->save();
+
+        return Redirect::route('profile.edit')->with('status', 'avatar-uploaded');
+    }
+
+    /**
+     * Delete user avatar.
+     */
+    public function deleteAvatar(Request $request): RedirectResponse
+    {
+        $user = $request->user();
+
+        if ($user->avatar) {
+            Storage::disk('public')->delete('avatars/' . $user->avatar);
+            $user->avatar = null;
+            $user->save();
+        }
+
+        return Redirect::route('profile.edit')->with('status', 'avatar-deleted');
     }
 }
