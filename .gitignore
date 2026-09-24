@@ -1,0 +1,16 @@
+node_modules/
+vendor/
+public/build/
+storage/uploads/*
+storage/logs/*
+storage/cache/*
+!storage/uploads/.gitkeep
+!storage/logs/.gitkeep
+!storage/cache/.gitkeep
+database/portfolio.sqlite
+database/test.sqlite
+.env
+.phpunit.cache/
+.phpunit.result.cache
+playwright-report/
+test-results/

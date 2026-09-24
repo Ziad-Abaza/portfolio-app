@@ -1,0 +1,108 @@
+/* ── Admin console — utilitarian sibling of the public site ─────────── */
+
+@import "./fonts.css";
+@import "tailwindcss";
+
+@source "../js/admin/**/*.vue";
+@source "../js/admin/**/*.ts";
+
+@theme inline {
+    --color-bg: var(--bg);
+    --color-surface: var(--surface);
+    --color-elevated: var(--elevated);
+    --color-border: var(--border);
+    --color-text: var(--text);
+    --color-dim: var(--text-dim);
+    --color-accent: var(--accent);
+    --color-accent-soft: var(--accent-soft);
+    --color-ember: var(--accent-ember);
+    --color-ok: var(--ok);
+    --color-err: var(--err);
+    --color-info: var(--info);
+    --font-sans: "IBM Plex Sans", "IBM Plex Sans Arabic", system-ui, sans-serif;
+    --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+    --font-display: "Clash Display", "IBM Plex Sans", sans-serif;
+}
+
+:root { color-scheme: dark; }
+[data-mode="light"] { color-scheme: light; }
+
+body { font-family: var(--font-sans); background: var(--bg); color: var(--text); font-size: .9375rem; }
+
+.mono { font-family: var(--font-mono); }
+
+.a-input, .a-select, .a-textarea {
+    width: 100%;
+    padding: .55rem .75rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--text);
+    font-size: .875rem;
+}
+.a-input:focus, .a-select:focus, .a-textarea:focus {
+    outline: none; border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent);
+}
+.a-label { display:block; font-family:var(--font-mono); font-size:.68rem; letter-spacing:.1em; text-transform:uppercase; color:var(--text-dim); margin-block-end:.35rem }
+
+.a-btn {
+    display: inline-flex; align-items: center; gap: .5rem;
+    padding: .5rem 1rem;
+    font-family: var(--font-mono); font-size: .75rem; letter-spacing: .06em; text-transform: uppercase;
+    border: 1px solid var(--border); border-radius: 4px;
+    color: var(--text); background: var(--surface);
+    cursor: pointer; transition: border-color .15s, color .15s, background .15s;
+}
+.a-btn:hover { border-color: var(--accent); color: var(--accent); }
+.a-btn-primary { border-color: var(--accent); color: var(--accent); }
+.a-btn-primary:hover { background: var(--accent); color: #0B0A08; }
+.a-btn-danger:hover { border-color: var(--err); color: var(--err); }
+.a-btn:disabled { opacity: .4; cursor: not-allowed; }
+
+.a-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.25rem;
+}
+
+.a-table { width: 100%; border-collapse: collapse; font-size: .875rem; }
+.a-table th {
+    text-align: start; font-family: var(--font-mono); font-size: .66rem;
+    letter-spacing: .1em; text-transform: uppercase; color: var(--text-dim);
+    padding: .625rem .75rem; border-block-end: 1px solid var(--border);
+}
+.a-table td { padding: .625rem .75rem; border-block-end: 1px solid var(--border); vertical-align: middle; }
+.a-table tr:hover td { background: var(--elevated); }
+
+.a-nav-link {
+    display: flex; align-items: center; gap: .625rem;
+    padding: .5rem .75rem; border-radius: 4px;
+    font-size: .8125rem; color: var(--text-dim);
+    transition: color .15s, background .15s;
+}
+.a-nav-link:hover { color: var(--text); background: var(--elevated); }
+.a-nav-link.router-link-active { color: var(--accent); background: var(--elevated); }
+
+.a-badge {
+    display:inline-block; padding:.15rem .5rem; border-radius:2px;
+    font-family:var(--font-mono); font-size:.66rem; letter-spacing:.06em; text-transform:uppercase;
+    border:1px solid var(--border); color:var(--text-dim);
+}
+.a-badge.on { color:var(--ok); border-color:var(--ok); }
+.a-badge.warn { color:var(--info); border-color:var(--info); }
+.a-badge.err { color:var(--err); border-color:var(--err); }
+
+.a-switch { position: relative; width: 38px; height: 20px; border-radius: 10px; background: var(--border); border: none; cursor: pointer; transition: background .2s; }
+.a-switch[aria-checked="true"] { background: var(--accent); }
+.a-switch::after { content:""; position:absolute; top:2px; inset-inline-start:2px; width:16px; height:16px; border-radius:50%; background:var(--text); transition:transform .2s; }
+.a-switch[aria-checked="true"]::after { transform: translateX(18px); }
+[dir="rtl"] .a-switch[aria-checked="true"]::after { transform: translateX(-18px); }
+
+.a-range { accent-color: var(--accent); width: 100%; }
+
+::-webkit-scrollbar { width: 9px; height: 9px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 5px; }
+
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }

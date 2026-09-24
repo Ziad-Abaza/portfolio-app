@@ -1,0 +1,23 @@
+{
+    "name": "ziad-hassan/portfolio",
+    "description": "The Living System — a cinematic bilingual portfolio built on a custom native PHP kernel.",
+    "type": "project",
+    "license": "proprietary",
+    "require": {
+        "php": ">=8.4"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^11.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        },
+        "files": [
+            "src/helpers.php"
+        ]
+    },
+    "scripts": {
+        "test": "phpunit --testdox"
+    }
+}

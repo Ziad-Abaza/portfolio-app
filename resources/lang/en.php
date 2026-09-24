@@ -1,0 +1,76 @@
+<?php
+
+return [
+    'nav' => [
+        'work' => 'Work',
+        'expertise' => 'Expertise',
+        'architecture' => 'Architecture',
+        'contact' => 'Contact',
+        'skip' => 'Skip to main content',
+        'menu' => 'Menu',
+        'close' => 'Close',
+    ],
+    'hero' => [
+        'availability' => 'Available for select projects',
+        'cta_work' => 'See the work',
+        'cta_contact' => 'Start a project',
+        'scroll' => 'Scroll',
+        'field_caption' => 'Live system map — every node a capability',
+    ],
+    'sections' => [
+        'expertise_lede' => 'Capabilities organized the way they are used in production — as systems, not lists.',
+        'architecture_lede' => 'How a request travels through the systems I build. The background you have been scrolling through is this diagram.',
+        'work_lede' => 'Selected systems — each one a production environment with real constraints.',
+        'metrics_lede' => 'Numbers that survived contact with production.',
+        'timeline_lede' => 'The path, compressed.',
+        'depth_lede' => 'The disciplines behind the visible work.',
+        'ai_lede' => 'AI features shipped inside real products — measured, metered, maintained.',
+        'performance_lede' => 'This page grades itself. The scores below are live, not aspirational.',
+        'contact_lede' => 'Tell me about the system you need — or the one that is breaking.',
+    ],
+    'work' => [
+        'view_case' => 'Read the case study',
+        'view_all' => 'All work',
+        'role' => 'Role',
+        'stack' => 'Stack',
+        'back' => 'Back to work',
+        'blocks' => [
+            'problem' => 'The problem',
+            'approach' => 'The approach',
+            'architecture' => 'The architecture',
+            'outcome' => 'The outcome',
+            'metrics' => 'The numbers',
+            'text' => '',
+            'gallery' => 'Gallery',
+        ],
+    ],
+    'contact' => [
+        'name' => 'Your name',
+        'email' => 'Email',
+        'message' => 'The project',
+        'message_hint' => 'What are you building, fixing, or scaling?',
+        'send' => 'Send message',
+        'sending' => 'Sending…',
+        'sent' => 'Message received. I reply within one working day.',
+        'direct' => 'Prefer email?',
+        'errors' => [
+            'required' => 'This field is required.',
+            'email' => 'Enter a valid email address.',
+            'min' => 'Too short — give me a little more.',
+            'throttle' => 'Too many messages. Try again later.',
+        ],
+    ],
+    'perf' => [
+        'title' => 'Self-audit',
+        'caption' => 'Lighthouse targets this build is engineered to hit',
+    ],
+    'footer' => [
+        'built' => 'Built on a custom PHP kernel — no framework, no template.',
+        'admin' => 'Admin',
+    ],
+    'misc' => [
+        'locale_switch' => 'العربية',
+        'theme_toggle' => 'Toggle theme',
+        'status_ok' => 'All systems nominal',
+    ],
+];

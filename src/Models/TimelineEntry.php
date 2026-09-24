@@ -1,0 +1,13 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Models;
+
+use App\Core\Model;
+
+final class TimelineEntry extends Model
+{
+    protected static string $table = 'timeline_entries';
+    protected static array $jsonFields = ['title', 'description'];
+}
