@@ -71,6 +71,9 @@ export function initMotion(field: SystemField | null): void {
         [...group.children].forEach((child, i) => (child as HTMLElement).style.setProperty('--i', String(i)));
         io.observe(group);
     });
+    // section index bars grow when their section enters
+    document.querySelectorAll<HTMLElement>('.sec-index').forEach((el) => io.observe(el));
+
     // standalone level bars / counters outside reveal groups
     document.querySelectorAll<HTMLElement>('[data-level]').forEach((bar) => {
         new IntersectionObserver((ents, o) => {
@@ -150,16 +153,25 @@ export function initMotion(field: SystemField | null): void {
                 tx = e.clientX; ty = e.clientY;
                 dot.style.left = `${tx}px`; dot.style.top = `${ty}px`;
             }, { passive: true });
+            // elements added later (e.g. filtered lists) still get hover state
+            const ringIO = new MutationObserver(() => bindRingTargets());
+            const bound = new WeakSet<Element>();
+            const bindRingTargets = () => {
+                document.querySelectorAll('a, button, [role="button"], input, textarea, .arch-node').forEach((el) => {
+                    if (bound.has(el)) return;
+                    bound.add(el);
+                    el.addEventListener('pointerenter', () => ring.classList.add('is-active'));
+                    el.addEventListener('pointerleave', () => ring.classList.remove('is-active'));
+                });
+            };
+            bindRingTargets();
+            ringIO.observe(document.body, { childList: true, subtree: true });
             const follow = () => {
                 rx += (tx - rx) * 0.16; ry += (ty - ry) * 0.16;
                 ring.style.left = `${rx}px`; ring.style.top = `${ry}px`;
                 requestAnimationFrame(follow);
             };
             follow();
-            document.querySelectorAll('a, button, [role="button"], input, textarea, .arch-node').forEach((el) => {
-                el.addEventListener('pointerenter', () => ring.classList.add('is-active'));
-                el.addEventListener('pointerleave', () => ring.classList.remove('is-active'));
-            });
         }
     }
 
@@ -236,6 +248,8 @@ export function initMotion(field: SystemField | null): void {
 
 /** Count-up animation for metric values (parses numeric prefix). */
 function animateCount(el: HTMLElement): void {
+    if (el.dataset.counted) return;
+    el.dataset.counted = '1';
     const target = el.dataset.count ?? '';
     const match = target.match(/^(\d+(?:\.\d+)?)/);
     if (!match) return;
