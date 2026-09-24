@@ -14,7 +14,7 @@ export type NodeType = 'edge' | 'core' | 'data' | 'agent' | 'tenant' | 'endpoint
 
 interface Node {
     x: number; y: number; vx: number; vy: number;
-    type: NodeType; cluster: string; energy: number; size: number; phase: number;
+    type: NodeType; cluster: string; energy: number; size: number;
 }
 
 interface Packet { a: number; b: number; t: number; speed: number }
@@ -72,8 +72,7 @@ export class SystemField {
 
         window.addEventListener('resize', this.onResize, { passive: true });
         window.addEventListener('pointermove', this.onPointer, { passive: true });
-        document.documentElement.addEventListener('mouseleave', this.onPointerOut, { passive: true });
-        window.addEventListener('blur', this.onPointerOut);
+        window.addEventListener('pointerleave', this.onPointerOut, { passive: true });
         window.addEventListener('scroll', this.onScroll, { passive: true });
         document.addEventListener('visibilitychange', this.onVisibility);
         window.addEventListener('zh:theme', this.onTheme);
@@ -92,8 +91,6 @@ export class SystemField {
         cancelAnimationFrame(this.raf);
         window.removeEventListener('resize', this.onResize);
         window.removeEventListener('pointermove', this.onPointer);
-        document.documentElement.removeEventListener('mouseleave', this.onPointerOut);
-        window.removeEventListener('blur', this.onPointerOut);
         window.removeEventListener('scroll', this.onScroll);
         document.removeEventListener('visibilitychange', this.onVisibility);
         window.removeEventListener('zh:theme', this.onTheme);
@@ -160,13 +157,12 @@ export class SystemField {
             this.nodes.push({
                 x: Math.random() * window.innerWidth,
                 y: Math.random() * window.innerHeight,
-                vx: (Math.random() - 0.5) * 0.7,
-                vy: (Math.random() - 0.5) * 0.7,
+                vx: (Math.random() - 0.5) * 0.14,
+                vy: (Math.random() - 0.5) * 0.14,
                 type: TYPES[i % TYPES.length]!,
                 cluster: CLUSTERS[i % CLUSTERS.length]!,
                 energy: 0,
                 size: 1.6 + Math.random() * 1.8,
-                phase: Math.random() * Math.PI * 2,
             });
         }
     }
@@ -206,10 +202,10 @@ export class SystemField {
             if (n.x < -20) n.x = W + 20; else if (n.x > W + 20) n.x = -20;
             if (n.y < -20) n.y = H + 20; else if (n.y > H + 20) n.y = -20;
 
-            // organic wander — strong enough to be visibly alive
-            n.vx += (Math.random() - 0.5) * 0.045 * dt;
-            n.vy += (Math.random() - 0.5) * 0.045 * dt;
-            const vmax = 0.55;
+            // gentle drift randomness
+            n.vx += (Math.random() - 0.5) * 0.012 * dt;
+            n.vy += (Math.random() - 0.5) * 0.012 * dt;
+            const vmax = 0.22;
             n.vx = Math.max(-vmax, Math.min(vmax, n.vx));
             n.vy = Math.max(-vmax, Math.min(vmax, n.vy));
 
@@ -230,9 +226,9 @@ export class SystemField {
                 if (d2 < pointerR * pointerR) {
                     const d = Math.sqrt(d2) || 1;
                     const f = (1 - d / pointerR);
-                    n.energy = Math.min(n.energy + f * 0.06 * dt * intensity, 1);
-                    n.vx += (dx / d) * f * 0.05 * dt;
-                    n.vy += (dy / d) * f * 0.05 * dt;
+                    n.energy = Math.min(n.energy + f * 0.05 * dt * intensity, 1);
+                    n.vx += (dx / d) * f * 0.014 * dt;
+                    n.vy += (dy / d) * f * 0.014 * dt;
                 }
             }
         }
@@ -248,13 +244,13 @@ export class SystemField {
         const targetPackets = Math.round((6 + this.scrollEnergy * 14) * intensity);
         while (this.packets.length < targetPackets && this.edges.length > 0) {
             const e = this.edges[Math.floor(Math.random() * this.edges.length)]!;
-            this.packets.push({ a: e[0], b: e[1], t: 0, speed: 0.014 + Math.random() * 0.03 });
+            this.packets.push({ a: e[0], b: e[1], t: 0, speed: 0.008 + Math.random() * 0.02 });
         }
         this.packets = this.packets.filter((p) => {
             p.t += p.speed * dt;
             if (p.t >= 1) {
                 const dst = this.nodes[p.b];
-                if (dst) dst.energy = Math.min(dst.energy + 0.5, 1);
+                if (dst) dst.energy = Math.min(dst.energy + 0.4, 1);
                 return false;
             }
             return true;
@@ -270,48 +266,42 @@ export class SystemField {
         for (const [ai, bi] of this.edges) {
             const a = this.nodes[ai]!, b = this.nodes[bi]!;
             const energy = Math.max(a.energy, b.energy);
-            ctx.strokeStyle = this.withAlpha(this.colors.border, 0.42 + energy * 0.5);
+            ctx.strokeStyle = this.withAlpha(this.colors.border, 0.35 + energy * 0.5);
             ctx.beginPath();
             ctx.moveTo(a.x, a.y);
             ctx.lineTo(b.x, b.y);
             ctx.stroke();
         }
 
-        // packets — request traffic, visible as signal pulses with a soft halo
+        // packets — request traffic
         for (const p of this.packets) {
             const a = this.nodes[p.a], b = this.nodes[p.b];
             if (!a || !b) continue;
             const x = a.x + (b.x - a.x) * p.t;
             const y = a.y + (b.y - a.y) * p.t;
-            ctx.fillStyle = this.withAlpha(this.colors.accent, 0.28);
-            ctx.beginPath();
-            ctx.arc(x, y, 4.5, 0, Math.PI * 2);
-            ctx.fill();
             ctx.fillStyle = this.colors.accent;
             ctx.beginPath();
-            ctx.arc(x, y, 2, 0, Math.PI * 2);
+            ctx.arc(x, y, 1.6, 0, Math.PI * 2);
             ctx.fill();
         }
 
-        // nodes — typed glyphs, breathing scale, energized glow
-        const t = performance.now() * 0.0012;
+        // nodes — typed glyphs, energized glow
         for (const n of this.nodes) {
             const e = n.energy;
-            const breathe = 1 + Math.sin(t + n.phase) * 0.22;
             if (e > 0.05) {
-                ctx.fillStyle = this.withAlpha(this.colors.accent, 0.14 * e);
+                ctx.fillStyle = this.withAlpha(this.colors.accent, 0.10 * e);
                 ctx.beginPath();
-                ctx.arc(n.x, n.y, n.size * breathe * (4 + e * 5), 0, Math.PI * 2);
+                ctx.arc(n.x, n.y, n.size * (4 + e * 5), 0, Math.PI * 2);
                 ctx.fill();
             }
-            ctx.fillStyle = e > 0.4 ? this.colors.soft : this.withAlpha(this.colors.dim, 0.6 + e * 0.4);
-            this.glyph(n, breathe);
+            ctx.fillStyle = e > 0.4 ? this.colors.soft : this.withAlpha(this.colors.dim, 0.55 + e * 0.45);
+            this.glyph(n);
         }
     }
 
-    private glyph(n: Node, breathe = 1): void {
+    private glyph(n: Node): void {
         const { ctx } = this;
-        const s = n.size * breathe;
+        const s = n.size;
         ctx.beginPath();
         switch (n.type) {
             case 'core': // diamond

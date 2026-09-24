@@ -15,7 +15,6 @@ if (canvas) {
     try {
         field = new SystemField(canvas, fx.field ?? { enabled: true, density: 1, intensity: 1 });
         field.start();
-        (window as any).__field = field; // debug/testing seam
     } catch {
         // Canvas unsupported — the site still works; field is enhancement.
         canvas.remove();
